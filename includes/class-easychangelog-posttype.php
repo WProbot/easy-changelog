@@ -19,7 +19,7 @@ class Easy_Changelog_Post_Type_Registration {
 	public function init() {
 		add_action( 'init', array( $this, 'register' ) );
 
-		add_filter( 'the_content', array( $this, 'changelog_loop' ), 50 );
+		add_filter( 'easychangelog_print_log', array( $this, 'do_changelog' ) );
 	}
 
 	/**
@@ -120,7 +120,7 @@ class Easy_Changelog_Post_Type_Registration {
 	 *
 	 * @since  1.0.0
 	 */
-	public function changelog_loop( $content ) {
+	public function do_changelog() {
 
 		$easy      = get_option( 'easychangelog' );
 		$post_type = 'page';
@@ -160,6 +160,7 @@ class Easy_Changelog_Post_Type_Registration {
 
 		//* The Loop
 		if ( $the_query->have_posts() ) {
+			$content  = '<div class="easychangelog">';
 			$content .= '<h2>' . esc_html( $heading ) . '</h2>';
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
@@ -169,6 +170,7 @@ class Easy_Changelog_Post_Type_Registration {
 				$content .= '<div class="changelog-meta">' . __( 'Added: ',  'easy-changelog' ) . get_the_date() . '</div>';
 				$content .= '</div>';
 			}
+			$content .= '</div>';
 		}
 
 		//* Restore original Post Data
