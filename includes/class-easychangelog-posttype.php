@@ -10,17 +10,10 @@
  *
  */
 
-class Easy_Changelog_Post_Type_Registration {
+class EasyChangelog_Post_Type {
 
 	public $post_type = 'changelog';
-
 	public $taxonomies = 'project';
-
-	public function init() {
-		add_action( 'init', array( $this, 'register' ) );
-
-		add_filter( 'easychangelog_print_log', array( $this, 'do_changelog' ) );
-	}
 
 	/**
 	 * Initiate registrations of Changelog post types
@@ -112,71 +105,4 @@ class Easy_Changelog_Post_Type_Registration {
 		register_taxonomy( $this->taxonomies, $this->post_type, $args );
 
 	}
-
-	/**
-	 * loop of changelog posts
-	 * @param  filter $content add new loop
-	 * @return content          add all posts in specified Project taxonomy
-	 *
-	 * @since  1.0.0
-	 */
-	public function do_changelog() {
-
-		$easy      = get_option( 'easychangelog' );
-		$post_type = 'page';
-		if ( $easy['post_type'] ) {
-			$post_type = esc_attr( $easy['post_type'] );
-		}
-
-		$page  = get_post();
-		$slug  = $page->post_name;
-		$terms = get_terms( 'project' );
-
-		$term_list = array();
-		foreach ( $terms as $term ) {
-			$term_list[] .= $term->slug;
-		}
-
-		if ( ! is_singular( $post_type ) || ! in_array( $slug, $term_list ) ) {
-			return $content;
-		}
-
-		$args = array(
-			'nopaging'       => 'true',
-			'posts_per_page' => 100,
-			'orderby'        => 'date',
-			'order'          => 'DESC',
-			'post_type'      => 'changelog',
-			'project'        => $slug
-		);
-
-		//* The Query
-		$the_query = new WP_Query( $args );
-
-		$heading = __( 'Changelog', 'easy-changelog' );
-		if ( $easy['heading'] ) {
-			$heading = $easy['heading'];
-		}
-
-		//* The Loop
-		if ( $the_query->have_posts() ) {
-			$content  = '<div class="easychangelog">';
-			$content .= '<h2>' . esc_html( $heading ) . '</h2>';
-			while ( $the_query->have_posts() ) {
-				$the_query->the_post();
-				$content .= '<div class="changelog-entry">';
-				$content .= '<h3>' . esc_html( get_the_title() ) . '</h3>';
-				$content .= wpautop( get_the_content() );
-				$content .= '<div class="changelog-meta">' . __( 'Added: ',  'easy-changelog' ) . get_the_date() . '</div>';
-				$content .= '</div>';
-			}
-			$content .= '</div>';
-		}
-
-		//* Restore original Post Data
-		wp_reset_postdata();
-
-		return $content;
-	}
-
 }

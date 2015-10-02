@@ -7,18 +7,13 @@
  * @copyright 2014 Robin Cornett Creative, LLC
  */
 
-class Easy_Changelog_Settings {
+class EasyChangelog_Settings {
 
 	/**
 	 * variable set for easy changelog option
 	 * @var option
 	 */
 	protected $setting;
-
-	function __construct() {
-		add_action( 'admin_menu', array( $this, 'do_submenu_page' ) );
-	}
-
 
 	/**
 	 * add a submenu page under Changelog Post Type
@@ -51,7 +46,7 @@ class Easy_Changelog_Settings {
 		$page_title = get_admin_page_title();
 
 		echo '<div class="wrap">';
-			echo '<h2>' . $page_title . '</h2>';
+			echo '<h2>' . esc_attr( $page_title ) . '</h2>';
 			echo '<form action="options.php" method="post">';
 				settings_fields( 'easychangelog' );
 				do_settings_sections( 'easychangelog' );
@@ -64,7 +59,7 @@ class Easy_Changelog_Settings {
 
 	/**
 	 * Settings for options screen
-	 * @return settings for backstretch image options
+	 * @return settings for easy changelog
 	 *
 	 * @since 1.0.0
 	 */
@@ -74,7 +69,7 @@ class Easy_Changelog_Settings {
 
 		$defaults = array(
 			'heading'   => '',
-			'post_type' => 'page'
+			'post_type' => 'page',
 		);
 
 		$this->setting = get_option( 'easychangelog', $defaults );
@@ -82,7 +77,7 @@ class Easy_Changelog_Settings {
 		add_settings_section(
 			'easy_changelog_section',
 			__( 'Optional Sitewide Settings', 'easy-changelog' ),
-			array( $this, 'section_description'),
+			array( $this, 'section_description' ),
 			'easychangelog'
 		);
 
@@ -112,7 +107,7 @@ class Easy_Changelog_Settings {
 	 * @since 1.0.0
 	 */
 	public function section_description() {
-		echo '<p>' . __( 'The Easy Changelog plugin has just a few optional settings. Check the Help tab for more information. ', 'easy-changelog' ) . '</p>';
+		echo '<p>' . esc_attr__( 'The Easy Changelog plugin has just a few optional settings. Check the Help tab for more information. ', 'easy-changelog' ) . '</p>';
 	}
 
 	/**
@@ -124,7 +119,7 @@ class Easy_Changelog_Settings {
 	public function heading() {
 
 		echo '<input type="text" class="regular-text" id="easychangelog[heading]" name="easychangelog[heading]" value="' . esc_attr( $this->setting['heading'] ) . '" />';
-		echo '<p class="description">' . __( 'If you do not put a value in here, the heading above your changelog posts will be Changelog.', 'easy-changelog' ) . '</p>';
+		echo '<p class="description">' . esc_attr__( 'If you do not put a value in here, the heading above your changelog posts will be Changelog.', 'easy-changelog' ) . '</p>';
 
 	}
 
@@ -144,7 +139,7 @@ class Easy_Changelog_Settings {
 		$operator       = 'and';
 		$post_type_list = get_post_types( $args, $output, $operator );
 
-		//* Add posts to that post_type_list
+		// Add posts to that post_type_list
 		$post_type_list['page'] = 'page';
 		$post_type_list['post'] = 'post';
 
@@ -154,14 +149,12 @@ class Easy_Changelog_Settings {
 		}
 
 		echo '<select id="easychangelog[post_type]" name="easychangelog[post_type]" >';
-
-			foreach ( $post_type_list as $post_type_item ) {
-				echo '<option value="'. esc_attr( $post_type_item ) .'" ' . selected( esc_attr( $post_type_item ), $easy['post_type'] ) .'>'. esc_attr( $post_type_item ) .'</option>';
-			}
-
+		foreach ( $post_type_list as $post_type_item ) {
+			echo '<option value="'. esc_attr( $post_type_item ) .'" ' . selected( esc_attr( $post_type_item ), $easy['post_type'] ) .'>'. esc_attr( $post_type_item ) .'</option>';
+		}
 		echo '</select>';
 
-		echo '<p class="description">' . __( 'Select the post type to which you would like for your changelogs to be attached.', 'easy-changelog' ) . '</p>';
+		echo '<p class="description">' . esc_attr__( 'Select the post type to which you would like for your changelogs to be attached.', 'easy-changelog' ) . '</p>';
 	}
 
 	/**
@@ -174,7 +167,7 @@ class Easy_Changelog_Settings {
 	public function do_validation_things( $new_value ) {
 
 		if ( empty( $_POST['easychangelog_nonce'] ) ) {
-			wp_die( __( 'Something unexpected happened. Please try again.', 'easy-changelog' ) );
+			wp_die( esc_attr__( 'Something unexpected happened. Please try again.', 'easy-changelog' ) );
 		}
 
 		check_admin_referer( 'easychangelog_save-settings', 'easychangelog_nonce' );
@@ -196,14 +189,12 @@ class Easy_Changelog_Settings {
 	public function help() {
 		$screen = get_current_screen();
 
-		$heading_help =
-			'<h3>' . __( 'Heading', 'easy-changelog' ) . '</h3>' .
-			'<p>' . __( 'If you want the heading above your Changelog posts to be something other than "Changelog", enter a new heading here.', 'easy-changelog' ) . '</p>';
+		$heading_help  = '<h3>' . __( 'Heading', 'easy-changelog' ) . '</h3>';
+		$heading_help .= '<p>' . __( 'If you want the heading above your Changelog posts to be something other than "Changelog", enter a new heading here.', 'easy-changelog' ) . '</p>';
 
-		$post_type_help =
-			'<h3>' . __( 'Post Type', 'easy-changelog' ) . '</h3>' .
-			'<p>' . __( 'By default, Easy Changelog will attach your changelog posts to pages, but here, you may change which post type the plugin will use.', 'easy-changelog' ) . '</p>' .
-			'<p>' . __( 'Please note that your Project slug must match the slug of the page (or post type) to which you want the changelog posts attached.', 'easy-changelog' ) . '</p>';
+		$post_type_help  = '<h3>' . __( 'Post Type', 'easy-changelog' ) . '</h3>';
+		$post_type_help .= '<p>' . __( 'By default, Easy Changelog will attach your changelog posts to pages, but here, you may change which post type the plugin will use.', 'easy-changelog' ) . '</p>';
+		$post_type_help .= '<p>' . __( 'Please note that your Project slug must match the slug of the page (or post type) to which you want the changelog posts attached.', 'easy-changelog' ) . '</p>';
 
 		$screen->add_help_tab( array(
 			'id'      => 'displayfeaturedimage_less_header-help',
@@ -216,7 +207,5 @@ class Easy_Changelog_Settings {
 			'title'   => __( 'Post Type', 'easy-changelog' ),
 			'content' => $post_type_help,
 		) );
-
 	}
-
 }

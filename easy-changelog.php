@@ -22,19 +22,34 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-// Include classes
-require plugin_dir_path( __FILE__ ) . 'includes/class-easychangelog-posttype.php';
-require plugin_dir_path( __FILE__ ) . 'includes/class-easychangelog-settings.php';
+function easychangelog_require() {
+	$files = array(
+		'class-easychangelog',
+		'class-easychangelog-output',
+		'class-easychangelog-posttype',
+		'class-easychangelog-settings',
+	);
+
+	foreach ( $files as $file ) {
+		require plugin_dir_path( __FILE__ ) . 'includes/' . $file . '.php';
+	}
+}
+easychangelog_require();
+
 
 // Instantiate registration class, so we can add it as a dependency to main plugin class.
-$changelog_settings  = new Easy_Changelog_Settings;
+$changelog_post_type = new EasyChangelog_Post_Type;
+$changelog_settings  = new EasyChangelog_Settings;
+$changelog_output    = new EasyChangelog_Output;
 
 // Instantiate main plugin file, so activation callback does not need to be static.
-$changelog_post_type = new Easy_Changelog_Post_Type_Registration(
+$easychangelog = new EasyChangelog(
+	$changelog_post_type,
+	$changelog_output,
 	$changelog_settings
 );
 
-$changelog_post_type->init();
+$easychangelog->init();
 
 if ( ! function_exists( 'easychangelog_do_log' ) ) {
 	function easychangelog_do_log() {
