@@ -83,6 +83,9 @@ class EasyChangelog_Output {
 	 * @return boolean
 	 */
 	protected function can_do( $cando = false ) {
+		if ( ! is_singular() ) {
+			return;
+		}
 		$easy      = get_option( 'easychangelog' );
 		$post_type = 'page';
 		if ( $easy['post_type'] ) {
