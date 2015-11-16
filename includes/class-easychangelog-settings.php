@@ -24,7 +24,7 @@ class EasyChangelog_Settings {
 
 		add_submenu_page(
 			'edit.php?post_type=changelog',
-			__( 'Easy Changelog Settings', 'easy-changelog' ),
+			__( 'Easy Changelog', 'easy-changelog' ),
 			__( 'Settings', 'easy-changelog' ),
 			'manage_categories',
 			'settings',

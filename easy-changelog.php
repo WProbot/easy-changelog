@@ -1,20 +1,20 @@
 <?php
 /**
- * Custom changelog plugin
+ * A small plugin to create changelog entries related to a custom post type.
  *
- * @package RGC_Changelog
+ * @package EasyChangelog
  * @author  Robin Cornett <hello@robincornett.com>
  * @license  GPL-2.0+
  * @link http://robincornett.com
  * @copyright 2014 Robin Cornett Creative, LLC
  *
- * Plugin Name:       Changelog Custom Post Type
- * Description:       Useful for tracking changelog of a plugin
+ * Plugin Name:       Easy Changelog
+ * Description:       A small plugin to create changelog entries related to a custom post type.
  * Author:            Robin Cornett
  * Author URI:        http://robincornett.com
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Version:           1.0.0
+ * Version:           1.0.1
  */
 
 // If this file is called directly, abort.

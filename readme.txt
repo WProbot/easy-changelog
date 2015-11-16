@@ -4,12 +4,12 @@ Contributors: littler.chicken
 Donate link: https://robincornett.com/donate/
 Tags: changelog
 Requires at least: 3.8
-Tested up to: 4.1
-Stable tag: 1.0.0
+Tested up to: 4.4
+Stable tag: 1.0.1
 License: GPL-2.0+
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
-This plugin makes a custom post type to simply display changelogs on your site.
+A small plugin to create changelog entries related to a custom post type.
 
 == Description ==
 

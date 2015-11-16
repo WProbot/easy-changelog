@@ -7,7 +7,7 @@ Super simple WordPress plugin to display changelogs, or release notes, on your s
 Each changelog post is assigned to a Project taxonomy and displayed on a page with the same name/slug. You can change which post type the changelogs are associated with on the plugin's Settings page.
 
 ## Requirements
-* WordPress 3.8, tested up to 4.1
+* WordPress 3.8, tested up to 4.4
 
 ## Installation
 
