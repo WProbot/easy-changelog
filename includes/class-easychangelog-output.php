@@ -44,7 +44,13 @@ class EasyChangelog_Output {
 			'orderby'        => 'date',
 			'order'          => 'DESC',
 			'post_type'      => 'changelog',
-			'project'        => $slug,
+			'tax_query' => array(
+				array(
+					'taxonomy' => 'project',
+					'field'    => 'slug',
+					'terms'    => $slug,
+				),
+			),
 		);
 
 		// The Query
