@@ -24,15 +24,15 @@ class EasyChangelog_Output {
 
 	/**
 	 * loop of changelog posts
-	 * @param  filter $content add new loop
-	 * @return content          add all posts in specified Project taxonomy
+	 *
+	 * @return mixed|string          add all posts in specified Project taxonomy
 	 *
 	 * @since  1.0.0
 	 */
 	public function do_changelog() {
 
 		if ( ! $this->can_do() ) {
-			return;
+			return '';
 		}
 
 		$easy = get_option( 'easychangelog' );
@@ -44,7 +44,7 @@ class EasyChangelog_Output {
 			'orderby'        => 'date',
 			'order'          => 'DESC',
 			'post_type'      => 'changelog',
-			'tax_query' => array(
+			'tax_query'      => array(
 				array(
 					'taxonomy' => 'project',
 					'field'    => 'slug',
@@ -55,24 +55,25 @@ class EasyChangelog_Output {
 
 		// The Query
 		$the_query = new WP_Query( $args );
+		if ( ! $the_query->have_posts() ) {
+			wp_reset_postdata();
 
+			return '';
 		}
 
 		// The Loop
-		if ( $the_query->have_posts() ) {
-			$content  = '<div class="easychangelog">';
-			$content .= '<div class="ec-list">';
-			while ( $the_query->have_posts() ) {
-				$the_query->the_post();
-				$content .= '<h3>' . esc_html( get_the_title() ) . '</h3>';
-				$content .= '<div class="changelog-entry">';
-				$content .= wpautop( get_the_content() );
-				$content .= '<div class="changelog-meta">' . __( 'Added: ',  'easy-changelog' ) . get_the_date() . '</div>';
-				$content .= '</div>';
-			}
-			$content .= '</div></div>';
+		$content  = '<div class="easychangelog">';
 		$content .= '<h2>' . $this->get_heading( $easy ) . '</h2>';
+		$content .= '<div class="ec-list">';
+		while ( $the_query->have_posts() ) {
+			$the_query->the_post();
+			$content .= '<h3>' . esc_html( get_the_title() ) . '</h3>';
+			$content .= '<div class="changelog-entry">';
+			$content .= wpautop( get_the_content() );
+			$content .= '<div class="changelog-meta">' . __( 'Added: ', 'easy-changelog' ) . get_the_date() . '</div>';
+			$content .= '</div>';
 		}
+		$content .= '</div></div>';
 
 		// Restore original Post Data
 		wp_reset_postdata();
@@ -111,6 +112,9 @@ class EasyChangelog_Output {
 		if ( $easy['post_type'] ) {
 			$post_type = $easy['post_type'];
 		}
+		if ( ! is_singular( $post_type ) ) {
+			return $cando;
+		}
 		$page  = get_post();
 		$slug  = $page->post_name;
 		$terms = get_terms( 'project' );
@@ -120,9 +124,10 @@ class EasyChangelog_Output {
 			$term_list[] = $term->slug;
 		}
 
-		if ( is_singular( $post_type ) && in_array( $slug, $term_list ) ) {
+		if ( in_array( $slug, $term_list, true ) ) {
 			$cando = true;
 		}
+
 		return $cando;
 	}
 }
