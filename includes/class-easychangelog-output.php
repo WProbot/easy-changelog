@@ -56,15 +56,11 @@ class EasyChangelog_Output {
 		// The Query
 		$the_query = new WP_Query( $args );
 
-		$heading = __( 'Changelog', 'easy-changelog' );
-		if ( $easy['heading'] ) {
-			$heading = $easy['heading'];
 		}
 
 		// The Loop
 		if ( $the_query->have_posts() ) {
 			$content  = '<div class="easychangelog">';
-			$content .= '<h2>' . esc_html( $heading ) . '</h2>';
 			$content .= '<div class="ec-list">';
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
@@ -75,6 +71,7 @@ class EasyChangelog_Output {
 				$content .= '</div>';
 			}
 			$content .= '</div></div>';
+		$content .= '<h2>' . $this->get_heading( $easy ) . '</h2>';
 		}
 
 		// Restore original Post Data
@@ -84,8 +81,25 @@ class EasyChangelog_Output {
 	}
 
 	/**
+	 * Get the changelog heading.
+	 *
+	 * @param  array  $easy
+	 * @return string
+	 */
+	private function get_heading( $easy ) {
+		$heading = __( 'Changelog', 'easy-changelog' );
+		if ( $easy['heading'] ) {
+			$heading = $easy['heading'];
+		}
+
+		return apply_filters( 'easychangelog_heading', $heading );
+	}
+
+	/**
 	 * Check if there is a changelog to be output
+	 *
 	 * @param  boolean $cando true if there is a changelog; false if not
+	 *
 	 * @return boolean
 	 */
 	protected function can_do( $cando = false ) {
