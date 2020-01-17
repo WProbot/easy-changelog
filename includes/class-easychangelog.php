@@ -20,7 +20,6 @@ class EasyChangelog {
 
 	public function init() {
 		add_action( 'init', array( $this->post_type, 'register' ) );
-		add_action( 'wp_enqueue_scripts', array( $this->output, 'load_scripts' ) );
 		add_filter( 'easychangelog_print_log', array( $this->output, 'do_changelog' ) );
 		add_action( 'admin_menu', array( $this->settings, 'do_submenu_page' ) );
 	}

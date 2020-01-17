@@ -12,16 +12,6 @@
 
 class EasyChangelog_Output {
 
-	public function load_scripts() {
-		$cando = apply_filters( 'easychangelog_force_accordion', (bool) $this->can_do() );
-		if ( ! $cando ) {
-			return;
-		}
-		$script = apply_filters( 'easychangelog_accordion_js', plugin_dir_url( __FILE__ ) . 'js/accordion.js' );
-		wp_enqueue_script( 'easychangelog-accordion', $script, array( 'jquery', 'jquery-ui-accordion' ), false, false );
-		wp_localize_script( 'easychangelog-accordion', 'easychangelogSelector', apply_filters( 'easychangelog_accordion_selector', 'h2' ) );
-	}
-
 	/**
 	 * loop of changelog posts
 	 *
@@ -62,18 +52,17 @@ class EasyChangelog_Output {
 		}
 
 		// The Loop
-		$content  = '<div class="easychangelog">';
-		$content .= '<h2>' . $this->get_heading( $easy ) . '</h2>';
-		$content .= '<div class="ec-list">';
+		$content  = '<details class="easychangelog">';
+		$content .= '<summary><h2>' . $this->get_heading( $easy ) . '</h2></summary>';
 		while ( $the_query->have_posts() ) {
 			$the_query->the_post();
-			$content .= '<h3>' . esc_html( get_the_title() ) . '</h3>';
 			$content .= '<div class="changelog-entry">';
+			$content .= '<h3>' . esc_html( get_the_title() ) . '</h3>';
 			$content .= wpautop( get_the_content() );
 			$content .= '<div class="changelog-meta">' . __( 'Added: ', 'easy-changelog' ) . get_the_date() . '</div>';
 			$content .= '</div>';
 		}
-		$content .= '</div></div>';
+		$content .= '</details>';
 
 		// Restore original Post Data
 		wp_reset_postdata();
